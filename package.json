@@ -1,0 +1,41 @@
+{
+  "name": "n8n-nodes-ecohash",
+  "version": "0.1.0",
+  "description": "n8n community nodes for EcoHash: Chat Model for AI Agents, Reranker (BGE) and Embeddings powered by the EcoHash API",
+  "keywords": ["n8n-community-node-package", "ecohash", "llm", "reranker", "embeddings", "ai"],
+  "license": "MIT",
+  "homepage": "https://docs.ecohash.com",
+  "author": { "name": "EcoHash", "email": "support@ecohash.com" },
+  "repository": { "type": "git", "url": "https://github.com/ecohash-ai/n8n-nodes-ecohash.git" },
+  "engines": { "node": ">=20" },
+  "main": "index.js",
+  "scripts": {
+    "build": "tsc && npm run copy-assets",
+    "copy-assets": "cp icons/ecohash.svg dist/nodes/LmChatEcoHash/ && cp icons/ecohash.svg dist/nodes/EcoHashReranker/ && cp icons/ecohash.svg dist/nodes/EmbeddingsEcoHash/ && cp icons/ecohash.svg dist/credentials/",
+    "lint": "eslint nodes credentials --ext .ts --no-error-on-unmatched-pattern",
+    "test": "vitest run"
+  },
+  "files": ["dist"],
+  "n8n": {
+    "n8nNodesApiVersion": 1,
+    "credentials": ["dist/credentials/EcoHashApi.credentials.js"],
+    "nodes": [
+      "dist/nodes/LmChatEcoHash/LmChatEcoHash.node.js",
+      "dist/nodes/EcoHashReranker/EcoHashReranker.node.js",
+      "dist/nodes/EmbeddingsEcoHash/EmbeddingsEcoHash.node.js"
+    ]
+  },
+  "peerDependencies": {
+    "n8n-workflow": "*",
+    "@n8n/ai-node-sdk": "*"
+  },
+  "devDependencies": {
+    "@n8n/ai-node-sdk": "^0.24.0",
+    "@typescript-eslint/parser": "^8.0.0",
+    "eslint": "^8.57.0",
+    "eslint-plugin-n8n-nodes-base": "^1.16.0",
+    "n8n-workflow": "^1.70.0",
+    "typescript": "^5.5.0",
+    "vitest": "^3.0.0"
+  }
+}
