@@ -44,4 +44,13 @@ describe('EmbeddingsEcoHash', () => {
     expect(ctx.helpers.httpRequest.mock.calls[0][0].body.input).toHaveLength(96);
     expect(ctx.helpers.httpRequest.mock.calls[1][0].body.input).toHaveLength(4);
   });
+
+  it('honors per-item index when resolving model parameter', async () => {
+    const ctx = fakeSupplyCtx({ model: 'jina-embeddings-v3' }, () => ({
+      data: [{ index: 0, embedding: [0.5] }],
+    }));
+    const node = new EmbeddingsEcoHash();
+    await node.supplyData.call(ctx as never, 3);
+    expect(ctx.getNodeParameter).toHaveBeenCalledWith('model', 3);
+  });
 });

@@ -50,9 +50,9 @@ export class EmbeddingsEcoHash implements INodeType {
     },
   };
 
-  async supplyData(this: ISupplyDataFunctions, _itemIndex: number): Promise<SupplyData> {
+  async supplyData(this: ISupplyDataFunctions, itemIndex: number): Promise<SupplyData> {
     const self = this;
-    const model = this.getNodeParameter('model', 0) as string;
+    const model = this.getNodeParameter('model', itemIndex) as string;
 
     async function embedBatch(input: string[]): Promise<number[][]> {
       const out = await ecohashRequest(self, 'POST', '/embeddings', { model, input });
