@@ -14,7 +14,7 @@ EcoHash ([docs.ecohash.com](https://docs.ecohash.com)) is an OpenAI-compatible A
 
 ### n8n Cloud
 
-n8n Cloud has supported self-service installation of verified community nodes since n8n version 1.94.0. Once this package passes n8n's community node verification review, you'll be able to go to **Nodes** in your instance and search for "EcoHash" to install it directly. Until then, use the self-hosted method below (or the npm package on a self-hosted/Cloud-with-custom-nodes setup).
+n8n Cloud has supported self-service installation of verified community nodes since n8n version 1.94.0. Once this package passes n8n's community node verification review, you'll be able to go to **Nodes** in your instance and search for "EcoHash" to install it directly. Until then, use the self-hosted method below.
 
 ### Self-hosted
 
@@ -47,9 +47,9 @@ Typical workflow: **Chat Trigger → AI Agent** (with **EcoHash Chat Model** att
 
 ### EcoHash Reranker
 
-A Reranker sub-node that plugs into the **Reranker** input of a Vector Store retrieval node or a Retrieval QA Chain. It uses EcoHash's BGE reranker models (`bge-reranker-v2-m3` by default) to re-score retrieved documents against the query and return the top-K matches. n8n's built-in reranker only supports Cohere; this node fills that gap for anyone who wants a self-hostable, OpenAI-compatible alternative.
+A Reranker sub-node that plugs into the **Reranker** input of a Vector Store retrieval node or a Question and Answer Chain. It uses EcoHash's BGE reranker models (`bge-reranker-v2-m3` by default) to re-score retrieved documents against the query and return the top-K matches. n8n's built-in reranker only supports Cohere; this node fills that gap for anyone who wants a self-hostable, OpenAI-compatible alternative.
 
-Typical workflow: **Vector Store (retrieve) → EcoHash Reranker → AI Agent / Question and Answer Chain**.
+Typical workflow: Vector Store (retrieve) with **EcoHash Reranker** attached to its Reranker input → AI Agent / Question and Answer Chain.
 
 ### Embeddings EcoHash
 
