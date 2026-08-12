@@ -127,6 +127,27 @@ describe('EmbeddingsEcoHash', () => {
     expect(ctx.helpers.httpRequest).not.toHaveBeenCalled();
   });
 
+
+  it('fails loudly when the API returns fewer vectors than inputs', async () => {
+    // Consumers zip vectors to documents by position, so a short response would attach
+    // the wrong vector to a document. Must error, not return a short array.
+    const ctx = fakeSupplyCtx({ model: 'jina-embeddings-v3' }, () => ({
+      data: [{ index: 0, embedding: [1] }],
+    }));
+    const node = new EmbeddingsEcoHash();
+    const { response } = (await node.supplyData.call(ctx as never, 0)) as { response: any };
+    await expect(response.embedDocuments(['a', 'b', 'c'])).rejects.toThrow(
+      'returned 1 embeddings for 3 inputs',
+    );
+  });
+
+  it('fails with a clear message when the response has no data array', async () => {
+    const ctx = fakeSupplyCtx({ model: 'jina-embeddings-v3' }, () => ({ detail: 'nope' }));
+    const node = new EmbeddingsEcoHash();
+    const { response } = (await node.supplyData.call(ctx as never, 0)) as { response: any };
+    await expect(response.embedQuery('hi')).rejects.toThrow('Unexpected response');
+  });
+
   it('honors per-item index when resolving model parameter', async () => {
     const ctx = fakeSupplyCtx({ model: 'jina-embeddings-v3' }, () => ({
       data: [{ index: 0, embedding: [0.5] }],

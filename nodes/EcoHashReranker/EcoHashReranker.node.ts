@@ -99,11 +99,34 @@ export class EcoHashReranker implements INodeType {
             top_n: topN,
           });
 
-          const ranked = (out.results as Array<{ index: number; relevance_score: number }>).map((r) => ({
-            pageContent: normalized[r.index].pageContent,
-            metadata: normalized[r.index].metadata,
-            _rerankScore: r.relevance_score,
-          }));
+          const results = out?.results as
+            | Array<{ index: number; relevance_score: number }>
+            | undefined;
+          if (!Array.isArray(results)) {
+            throw new NodeOperationError(
+              self.getNode(),
+              'Unexpected response from the EcoHash rerank API',
+              {
+                description: `Expected a "results" array. Got: ${JSON.stringify(out).slice(0, 200)}`,
+              },
+            );
+          }
+          // r.index points back into the documents we sent. A value outside that range
+          // would otherwise surface as "Cannot read properties of undefined".
+          const ranked = results.map((r) => {
+            const doc = normalized[r.index];
+            if (!doc) {
+              throw new NodeOperationError(
+                self.getNode(),
+                `EcoHash rerank returned index ${r.index}, which is outside the ${normalized.length} documents sent`,
+              );
+            }
+            return {
+              pageContent: doc.pageContent,
+              metadata: doc.metadata,
+              _rerankScore: r.relevance_score,
+            };
+          });
 
           self.addOutputData(NodeConnectionTypes.AiReranker, index, [[{ json: { response: ranked } }]]);
           return ranked;

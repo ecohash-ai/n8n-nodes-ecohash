@@ -127,4 +127,27 @@ describe('EcoHashReranker', () => {
     const body = ctx.helpers.httpRequest.mock.calls[0][0].body;
     expect(body.documents).toEqual(['plain text one', 'plain text two']);
   });
+
+  it('fails with a clear message when the response has no results array', async () => {
+    const ctx = fakeSupplyCtx({ model: 'bge-reranker-v2-m3', topK: 3 }, { detail: 'nope' });
+    const node = new EcoHashReranker();
+    const { response } = (await node.supplyData.call(ctx as never, 0)) as { response: any };
+    await expect(response.rerank({ query: 'q', documents: ['a'] })).rejects.toThrow(
+      'Unexpected response',
+    );
+  });
+
+  it('fails with a clear message when an index is out of range', async () => {
+    // previously surfaced as "Cannot read properties of undefined (reading 'pageContent')"
+    const ctx = fakeSupplyCtx(
+      { model: 'bge-reranker-v2-m3', topK: 3 },
+      { results: [{ index: 5, relevance_score: 0.9 }] },
+    );
+    const node = new EcoHashReranker();
+    const { response } = (await node.supplyData.call(ctx as never, 0)) as { response: any };
+    await expect(response.rerank({ query: 'q', documents: ['a', 'b'] })).rejects.toThrow(
+      'index 5, which is outside the 2 documents sent',
+    );
+  });
+
 });

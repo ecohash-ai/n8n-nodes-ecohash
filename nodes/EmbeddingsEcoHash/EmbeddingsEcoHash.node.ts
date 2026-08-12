@@ -93,9 +93,29 @@ export class EmbeddingsEcoHash implements INodeType {
 
     async function embedBatch(input: string[]): Promise<number[][]> {
       const out = await ecohashRequest(self, 'POST', '/embeddings', { model, input });
-      return (out.data as Array<{ index: number; embedding: number[] }>)
-        .sort((a, b) => a.index - b.index)
-        .map((d) => d.embedding);
+      const data = out?.data as Array<{ index: number; embedding: number[] }> | undefined;
+      if (!Array.isArray(data)) {
+        throw new NodeOperationError(
+          self.getNode(),
+          'Unexpected response from the EcoHash embeddings API',
+          {
+            description: `Expected a "data" array of embeddings. Got: ${JSON.stringify(out).slice(0, 200)}`,
+          },
+        );
+      }
+      // Consumers pair vectors to documents by position, so a short response would
+      // silently attach the wrong vector to a document — worse than failing here.
+      if (data.length !== input.length) {
+        throw new NodeOperationError(
+          self.getNode(),
+          `EcoHash returned ${data.length} embeddings for ${input.length} inputs`,
+          {
+            description:
+              'Vectors are matched to documents by position, so a count mismatch would corrupt the index. Retry the request; if it persists, report it with the model name.',
+          },
+        );
+      }
+      return data.sort((a, b) => a.index - b.index).map((d) => d.embedding);
     }
 
     const embedder = {
