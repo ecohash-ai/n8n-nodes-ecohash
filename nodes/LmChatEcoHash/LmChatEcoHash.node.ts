@@ -21,7 +21,14 @@ export class LmChatEcoHash implements INodeType {
     defaults: { name: 'EcoHash Chat Model' },
     codex: {
       categories: ['AI'],
-      subcategories: { AI: ['Language Models'] },
+      // Matches how n8n's own chat models are classified (23 of the 25 ai_languageModel
+      // node types ship exactly this shape). 'Root Nodes' is what lists the node in the
+      // AI panel itself; without the nested 'Chat Models (Recommended)' entry it also
+      // misses the grouping users browse to pick a chat model.
+      subcategories: {
+        AI: ['Language Models', 'Root Nodes'],
+        'Language Models': ['Chat Models (Recommended)'],
+      },
       resources: {
         primaryDocumentation: [{ url: 'https://docs.ecohash.com/platform-models/chat-completions' }],
       },
