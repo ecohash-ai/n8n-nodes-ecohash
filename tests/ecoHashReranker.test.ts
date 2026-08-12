@@ -63,4 +63,42 @@ describe('EcoHashReranker', () => {
     expect(await response.rerank({ query: 'q', documents: [] })).toEqual([]);
     expect(ctx.helpers.httpRequest).not.toHaveBeenCalled();
   });
+
+  it('calls addOutputData with error on API failure', async () => {
+    const testError = new Error('API failed');
+    const ctx = fakeSupplyCtx(
+      { model: 'bge-reranker-v2-m3', topK: 2 },
+      {},
+    );
+    ctx.helpers.httpRequest = vi.fn().mockRejectedValue(testError);
+    const node = new EcoHashReranker();
+    const { response } = (await node.supplyData.call(ctx as never, 0)) as { response: any };
+    await expect(response.rerank({ query: 'test query', documents: DOCS })).rejects.toThrow('API failed');
+    expect(ctx.addOutputData).toHaveBeenCalledOnce();
+    expect(ctx.addOutputData.mock.calls[0][2]).toEqual([[{ json: { error: 'Error: API failed' } }]]);
+  });
+
+  it('throws NodeOperationError for empty query without calling the API', async () => {
+    const ctx = fakeSupplyCtx({ model: 'bge-reranker-v2-m3', topK: 3 }, {});
+    const node = new EcoHashReranker();
+    const { response } = (await node.supplyData.call(ctx as never, 0)) as { response: any };
+    await expect(response.rerank({ query: '  ', documents: DOCS })).rejects.toThrow(
+      'Reranker query cannot be empty',
+    );
+    expect(ctx.helpers.httpRequest).not.toHaveBeenCalled();
+  });
+
+  it('normalizes plain string documents in request and response', async () => {
+    const ctx = fakeSupplyCtx(
+      { model: 'bge-reranker-v2-m3', topK: 2 },
+      { results: [{ index: 1, relevance_score: 0.8 }] },
+    );
+    const node = new EcoHashReranker();
+    const { response } = (await node.supplyData.call(ctx as never, 0)) as { response: any };
+    const stringDocs = ['plain text one', 'plain text two'];
+    const ranked = await response.rerank({ query: 'test query', documents: stringDocs });
+    expect(ranked).toEqual([{ pageContent: 'plain text two', metadata: {}, _rerankScore: 0.8 }]);
+    const body = ctx.helpers.httpRequest.mock.calls[0][0].body;
+    expect(body.documents).toEqual(['plain text one', 'plain text two']);
+  });
 });

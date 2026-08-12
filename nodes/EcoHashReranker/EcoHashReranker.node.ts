@@ -82,29 +82,34 @@ export class EcoHashReranker implements INodeType {
           [{ json: { query, documents: docs } }],
         ]);
 
-        const model = self.getNodeParameter('model', 0) as string;
-        const topN = input.topN ?? (self.getNodeParameter('topK', 0) as number);
-        const normalized = docs.map((doc, i) =>
-          typeof doc === 'string'
-            ? { pageContent: doc, metadata: {}, _originalIndex: i }
-            : { pageContent: doc.pageContent ?? JSON.stringify(doc), metadata: doc.metadata ?? {}, _originalIndex: i },
-        );
+        try {
+          const model = self.getNodeParameter('model', 0) as string;
+          const topN = input.topN ?? (self.getNodeParameter('topK', 0) as number);
+          const normalized = docs.map((doc, i) =>
+            typeof doc === 'string'
+              ? { pageContent: doc, metadata: {}, _originalIndex: i }
+              : { pageContent: doc.pageContent ?? JSON.stringify(doc), metadata: doc.metadata ?? {}, _originalIndex: i },
+          );
 
-        const out = await ecohashRequest(self, 'POST', '/rerank', {
-          model,
-          query,
-          documents: normalized.map((d) => d.pageContent),
-          top_n: topN,
-        });
+          const out = await ecohashRequest(self, 'POST', '/rerank', {
+            model,
+            query,
+            documents: normalized.map((d) => d.pageContent),
+            top_n: topN,
+          });
 
-        const ranked = (out.results as Array<{ index: number; relevance_score: number }>).map((r) => ({
-          pageContent: normalized[r.index].pageContent,
-          metadata: normalized[r.index].metadata,
-          _rerankScore: r.relevance_score,
-        }));
+          const ranked = (out.results as Array<{ index: number; relevance_score: number }>).map((r) => ({
+            pageContent: normalized[r.index].pageContent,
+            metadata: normalized[r.index].metadata,
+            _rerankScore: r.relevance_score,
+          }));
 
-        self.addOutputData(NodeConnectionTypes.AiReranker, index, [[{ json: { response: ranked } }]]);
-        return ranked;
+          self.addOutputData(NodeConnectionTypes.AiReranker, index, [[{ json: { response: ranked } }]]);
+          return ranked;
+        } catch (error) {
+          self.addOutputData(NodeConnectionTypes.AiReranker, index, [[{ json: { error: String(error) } }]]);
+          throw error;
+        }
       },
 
       compressDocuments: async (documents: RerankInput['documents'], query: string, topN?: number) => {
