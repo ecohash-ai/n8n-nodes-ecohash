@@ -88,6 +88,32 @@ describe('EcoHashReranker', () => {
     expect(ctx.helpers.httpRequest).not.toHaveBeenCalled();
   });
 
+  it('honors per-item index when resolving model and topK parameters', async () => {
+    const ctx = fakeSupplyCtx(
+      { model: 'bge-reranker-v2-m3', topK: 2 },
+      { results: [{ index: 0, relevance_score: 0.9 }] },
+    );
+    const node = new EcoHashReranker();
+    const { response } = (await node.supplyData.call(ctx as never, 2)) as { response: any };
+    await response.rerank({ query: 'q', documents: DOCS });
+    expect(ctx.getNodeParameter).toHaveBeenCalledWith('model', 2);
+    expect(ctx.getNodeParameter).toHaveBeenCalledWith('topK', 2);
+  });
+
+  it('compressDocuments ignores a non-numeric third argument (LangChain Callbacks) and falls back to topK', async () => {
+    const ctx = fakeSupplyCtx(
+      { model: 'bge-reranker-v2-m3', topK: 1 },
+      { results: [{ index: 1, relevance_score: 0.5 }] },
+    );
+    const node = new EcoHashReranker();
+    const { response } = (await node.supplyData.call(ctx as never, 0)) as { response: any };
+    const fakeCallbacks = { handlers: [] };
+    const out = await response.compressDocuments(DOCS, 'q', fakeCallbacks);
+    expect(out).toEqual([{ pageContent: 'bananas are yellow', metadata: { source: 'b' } }]);
+    const body = ctx.helpers.httpRequest.mock.calls[0][0].body;
+    expect(body.top_n).toBe(1);
+  });
+
   it('normalizes plain string documents in request and response', async () => {
     const ctx = fakeSupplyCtx(
       { model: 'bge-reranker-v2-m3', topK: 2 },

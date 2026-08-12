@@ -43,6 +43,7 @@ export class EcoHashReranker implements INodeType {
         type: 'options',
         typeOptions: { loadOptionsMethod: 'getModels' },
         default: 'bge-reranker-v2-m3',
+        description: 'Reranker model from the EcoHash catalog',
       },
       {
         displayName: 'Top K',
@@ -64,7 +65,7 @@ export class EcoHashReranker implements INodeType {
     },
   };
 
-  async supplyData(this: ISupplyDataFunctions, _itemIndex: number): Promise<SupplyData> {
+  async supplyData(this: ISupplyDataFunctions, itemIndex: number): Promise<SupplyData> {
     const self = this;
 
     const provider = {
@@ -83,8 +84,8 @@ export class EcoHashReranker implements INodeType {
         ]);
 
         try {
-          const model = self.getNodeParameter('model', 0) as string;
-          const topN = input.topN ?? (self.getNodeParameter('topK', 0) as number);
+          const model = self.getNodeParameter('model', itemIndex) as string;
+          const topN = input.topN ?? (self.getNodeParameter('topK', itemIndex) as number);
           const normalized = docs.map((doc, i) =>
             typeof doc === 'string'
               ? { pageContent: doc, metadata: {}, _originalIndex: i }
@@ -112,8 +113,9 @@ export class EcoHashReranker implements INodeType {
         }
       },
 
-      compressDocuments: async (documents: RerankInput['documents'], query: string, topN?: number) => {
-        const ranked = await provider.rerank({ query, documents, topN });
+      compressDocuments: async (documents: RerankInput['documents'], query: string, topN?: unknown) => {
+        const limit = typeof topN === 'number' ? topN : undefined;
+        const ranked = await provider.rerank({ query, documents, topN: limit });
         return ranked.map(({ _rerankScore, ...doc }: { _rerankScore: number }) => doc);
       },
     };

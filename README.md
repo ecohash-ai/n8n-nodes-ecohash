@@ -70,7 +70,7 @@ A minimal retrieval-augmented generation workflow using all three nodes:
 
 ## Compatibility
 
-Requires n8n version 1.94.0 or later, which is when community nodes became installable on n8n Cloud.
+Developed and tested against n8n 2.x (2.34+). n8n Cloud has supported installing verified community nodes since version 1.94.0.
 
 ## Resources
 

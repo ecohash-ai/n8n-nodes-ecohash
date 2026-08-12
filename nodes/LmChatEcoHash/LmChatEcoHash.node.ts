@@ -36,7 +36,7 @@ export class LmChatEcoHash implements INodeType {
         name: 'model',
         type: 'options',
         typeOptions: { loadOptionsMethod: 'getModels' },
-        default: 'glm-5.2',
+        default: 'GLM-5.2',
         description: 'Chat or vision model from the EcoHash catalog',
       },
       {
@@ -52,7 +52,8 @@ export class LmChatEcoHash implements INodeType {
   methods = {
     loadOptions: {
       async getModels(this: ILoadOptionsFunctions): Promise<INodePropertyOptions[]> {
-        return await loadModelOptions(this, ['llm', 'llm_vision']);
+        const options = await loadModelOptions(this, ['llm', 'llm_vision']);
+        return options.length ? options : [{ name: 'GLM-5.2', value: 'GLM-5.2' }];
       },
     },
   };

@@ -38,6 +38,7 @@ export class EmbeddingsEcoHash implements INodeType {
         type: 'options',
         typeOptions: { loadOptionsMethod: 'getModels' },
         default: 'jina-embeddings-v3',
+        description: 'Embedding model from the EcoHash catalog',
       },
     ],
   };
@@ -45,7 +46,8 @@ export class EmbeddingsEcoHash implements INodeType {
   methods = {
     loadOptions: {
       async getModels(this: ILoadOptionsFunctions): Promise<INodePropertyOptions[]> {
-        return await loadModelOptions(this, ['embedding']);
+        const options = await loadModelOptions(this, ['embedding']);
+        return options.length ? options : [{ name: 'Jina-Embeddings-V3', value: 'jina-embeddings-v3' }];
       },
     },
   };

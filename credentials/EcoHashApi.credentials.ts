@@ -2,12 +2,14 @@ import type {
   IAuthenticateGeneric,
   ICredentialTestRequest,
   ICredentialType,
+  Icon,
   INodeProperties,
 } from 'n8n-workflow';
 
 export class EcoHashApi implements ICredentialType {
   name = 'ecoHashApi';
   displayName = 'EcoHash API';
+  icon: Icon = 'file:ecohash.svg';
   documentationUrl = 'https://docs.ecohash.com/getting-started/api-keys';
   properties: INodeProperties[] = [
     {
