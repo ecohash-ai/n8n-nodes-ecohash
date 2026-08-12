@@ -61,7 +61,8 @@ export class LmChatEcoHash implements INodeType {
     const credentials = (await this.getCredentials('ecoHashApi')) as { apiKey: string };
     const model = this.getNodeParameter('model', itemIndex) as string;
     const temperature = this.getNodeParameter('temperature', itemIndex) as number;
-    return await supplyModel(this as any, {
+    // n8n-workflow major-version skew: this package types against 1.x, @n8n/ai-utilities' nested copy is 2.x
+    return await supplyModel(this as unknown as Parameters<typeof supplyModel>[0], {
       type: 'openai',
       baseUrl: ECOHASH_BASE_URL,
       apiKey: credentials.apiKey,
