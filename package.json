@@ -1,6 +1,6 @@
 {
   "name": "n8n-nodes-ecohash",
-  "version": "0.1.0",
+  "version": "1.0.0",
   "description": "n8n community nodes for EcoHash: Chat Model for AI Agents, Reranker (BGE) and Embeddings powered by the EcoHash API",
   "keywords": ["n8n-community-node-package", "ecohash", "llm", "reranker", "embeddings", "ai"],
   "license": "MIT",

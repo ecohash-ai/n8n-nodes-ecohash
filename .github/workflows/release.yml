@@ -23,6 +23,17 @@ jobs:
       - run: npm run lint
       - run: npm test
       - run: npm run build
+      # Provenance requires a PUBLIC source repository — npm dropped support for
+      # private ones in 2023, and n8n requires provenance for verified nodes as of
+      # 2026-05-01. This step fails while the repo is private.
+      #
+      # After the first successful publish, switch to trusted publishing (OIDC):
+      #   1. npmjs.com -> the package -> Settings -> Trusted Publisher -> add this
+      #      repo + workflow (release.yml)
+      #   2. delete the two `env:` lines below and the NPM_TOKEN secret
+      #   3. drop `--provenance` (trusted publishing attests automatically)
+      # A token cannot be avoided for the very first publish: the trusted-publisher
+      # setting lives on the package, which does not exist yet.
       - run: npm publish --provenance --access public
         env:
           NODE_AUTH_TOKEN: ${{ secrets.NPM_TOKEN }}
