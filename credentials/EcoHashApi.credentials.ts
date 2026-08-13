@@ -9,7 +9,7 @@ import type {
 export class EcoHashApi implements ICredentialType {
   name = 'ecoHashApi';
   displayName = 'EcoHash API';
-  icon: Icon = 'file:ecohash.svg';
+  icon: Icon = { light: 'file:ecohash.svg', dark: 'file:ecohash.dark.svg' };
   documentationUrl = 'https://docs.ecohash.com/getting-started/api-keys';
   properties: INodeProperties[] = [
     {

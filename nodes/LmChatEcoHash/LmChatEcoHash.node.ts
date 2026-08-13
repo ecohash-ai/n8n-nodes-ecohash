@@ -14,10 +14,11 @@ export class LmChatEcoHash implements INodeType {
   description: INodeTypeDescription = {
     displayName: 'EcoHash Chat Model',
     name: 'lmChatEcoHash',
-    icon: 'file:ecohash.svg',
+    icon: { light: 'file:ecohash.svg', dark: 'file:ecohash.dark.svg' },
     group: ['transform'],
     version: 1,
     description: 'Use EcoHash chat and vision models with AI Agents and Chains',
+    subtitle: '={{$parameter["model"]}}',
     defaults: { name: 'EcoHash Chat Model' },
     codex: {
       categories: ['AI'],
@@ -39,12 +40,13 @@ export class LmChatEcoHash implements INodeType {
     credentials: [{ name: 'ecoHashApi', required: true }],
     properties: [
       {
-        displayName: 'Model',
+        displayName: 'Model Name or ID',
         name: 'model',
         type: 'options',
         typeOptions: { loadOptionsMethod: 'getModels' },
         default: 'GLM-5.2',
-        description: 'Chat or vision model from the EcoHash catalog',
+        description:
+          'Choose from the list, or specify an ID using an <a href="https://docs.n8n.io/code/expressions/">expression</a>',
       },
       {
         displayName: 'Temperature',

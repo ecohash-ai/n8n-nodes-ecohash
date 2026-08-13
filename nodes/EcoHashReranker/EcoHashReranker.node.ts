@@ -1,4 +1,5 @@
 import {
+  NodeApiError,
   NodeConnectionTypes,
   NodeOperationError,
   type ILoadOptionsFunctions,
@@ -6,6 +7,7 @@ import {
   type INodeType,
   type INodeTypeDescription,
   type ISupplyDataFunctions,
+  type JsonObject,
   type SupplyData,
 } from 'n8n-workflow';
 import { ecohashRequest, loadModelOptions } from '../shared/ecohashApi';
@@ -20,10 +22,11 @@ export class EcoHashReranker implements INodeType {
   description: INodeTypeDescription = {
     displayName: 'EcoHash Reranker',
     name: 'ecoHashReranker',
-    icon: 'file:ecohash.svg',
+    icon: { light: 'file:ecohash.svg', dark: 'file:ecohash.dark.svg' },
     group: ['transform'],
     version: 1,
     description: 'Rerank retrieved documents by relevance using EcoHash BGE reranker models',
+    subtitle: '={{$parameter["model"]}}',
     defaults: { name: 'EcoHash Reranker' },
     codex: {
       categories: ['AI'],
@@ -38,12 +41,13 @@ export class EcoHashReranker implements INodeType {
     credentials: [{ name: 'ecoHashApi', required: true }],
     properties: [
       {
-        displayName: 'Model',
+        displayName: 'Model Name or ID',
         name: 'model',
         type: 'options',
         typeOptions: { loadOptionsMethod: 'getModels' },
         default: 'bge-reranker-v2-m3',
-        description: 'Reranker model from the EcoHash catalog',
+        description:
+          'Choose from the list, or specify an ID using an <a href="https://docs.n8n.io/code/expressions/">expression</a>',
       },
       {
         displayName: 'Top K',
@@ -132,7 +136,13 @@ export class EcoHashReranker implements INodeType {
           return ranked;
         } catch (error) {
           self.addOutputData(NodeConnectionTypes.AiReranker, index, [[{ json: { error: String(error) } }]]);
-          throw error;
+          // Validation failures above are already NodeOperationError — rethrown as-is
+          // (the constructor short-circuits back to the same instance). Anything else
+          // is a raw failure from the API call itself, so wrap it for HTTP context.
+          if (error instanceof NodeOperationError) {
+            throw new NodeOperationError(self.getNode(), error);
+          }
+          throw new NodeApiError(self.getNode(), error as JsonObject);
         }
       },
 

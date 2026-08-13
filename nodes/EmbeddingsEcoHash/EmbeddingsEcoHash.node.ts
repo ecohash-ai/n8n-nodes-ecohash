@@ -1,4 +1,5 @@
 import {
+  NodeApiError,
   NodeConnectionTypes,
   NodeOperationError,
   type ILoadOptionsFunctions,
@@ -6,6 +7,7 @@ import {
   type INodeType,
   type INodeTypeDescription,
   type ISupplyDataFunctions,
+  type JsonObject,
   type SupplyData,
 } from 'n8n-workflow';
 import { ecohashRequest, loadModelOptions } from '../shared/ecohashApi';
@@ -50,10 +52,11 @@ export class EmbeddingsEcoHash implements INodeType {
   description: INodeTypeDescription = {
     displayName: 'Embeddings EcoHash',
     name: 'embeddingsEcoHash',
-    icon: 'file:ecohash.svg',
+    icon: { light: 'file:ecohash.svg', dark: 'file:ecohash.dark.svg' },
     group: ['transform'],
     version: 1,
     description: 'Generate text embeddings with EcoHash models (Jina, Qwen3)',
+    subtitle: '={{$parameter["model"]}}',
     defaults: { name: 'Embeddings EcoHash' },
     codex: {
       categories: ['AI'],
@@ -68,12 +71,13 @@ export class EmbeddingsEcoHash implements INodeType {
     credentials: [{ name: 'ecoHashApi', required: true }],
     properties: [
       {
-        displayName: 'Model',
+        displayName: 'Model Name or ID',
         name: 'model',
         type: 'options',
         typeOptions: { loadOptionsMethod: 'getModels' },
         default: 'jina-embeddings-v3',
-        description: 'Embedding model from the EcoHash catalog',
+        description:
+          'Choose from the list, or specify an ID using an <a href="https://docs.n8n.io/code/expressions/">expression</a>',
       },
     ],
   };
@@ -134,7 +138,13 @@ export class EmbeddingsEcoHash implements INodeType {
           self.addOutputData(NodeConnectionTypes.AiEmbedding, index, [
             [{ json: { error: String(error) } }],
           ]);
-          throw error;
+          // embedBatch's own response-shape validation already throws NodeOperationError —
+          // rethrown as-is (the constructor short-circuits back to the same instance).
+          // Anything else is a raw failure from the API call itself, wrapped for HTTP context.
+          if (error instanceof NodeOperationError) {
+            throw new NodeOperationError(self.getNode(), error);
+          }
+          throw new NodeApiError(self.getNode(), error as JsonObject);
         }
       },
       embedDocuments: async (texts: string[]) => {
@@ -155,7 +165,11 @@ export class EmbeddingsEcoHash implements INodeType {
           self.addOutputData(NodeConnectionTypes.AiEmbedding, index, [
             [{ json: { error: String(error) } }],
           ]);
-          throw error;
+          // Same rationale as embedQuery's catch above.
+          if (error instanceof NodeOperationError) {
+            throw new NodeOperationError(self.getNode(), error);
+          }
+          throw new NodeApiError(self.getNode(), error as JsonObject);
         }
       },
     };
