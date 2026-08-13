@@ -8,7 +8,7 @@ This is an n8n community node package for [EcoHash](https://docs.ecohash.com), a
 
 ## What is EcoHash
 
-EcoHash ([docs.ecohash.com](https://docs.ecohash.com)) is an OpenAI-compatible API for chat, vision, embedding, and reranking models. Sign up at [api.ecohash.com](https://api.ecohash.com) — new accounts include free starter credit, so you can try the nodes below without adding a payment method first.
+EcoHash ([docs.ecohash.com](https://docs.ecohash.com)) is an OpenAI-compatible API for chat, vision, embedding, and reranking models. Sign up at [ecohash.com](https://ecohash.com) — new accounts include free starter credit, so you can try the nodes below without adding a payment method first.
 
 ## Installation
 
@@ -31,7 +31,7 @@ You can also install it with the n8n CLI or as part of a custom Docker image —
 
 All three nodes share a single credential type: **EcoHash API**. You only need one API key (it starts with `eco_`).
 
-1. Create an account at [api.ecohash.com](https://api.ecohash.com) if you haven't already.
+1. Create an account at [ecohash.com](https://ecohash.com) if you haven't already.
 2. Generate an API key by following [docs.ecohash.com/getting-started/api-keys](https://docs.ecohash.com/getting-started/api-keys).
 3. In n8n, create a new **EcoHash API** credential and paste the key in.
 
@@ -75,7 +75,7 @@ Developed and tested against n8n 2.x (2.34+). n8n Cloud has supported installing
 ## Resources
 
 - [EcoHash documentation](https://docs.ecohash.com)
-- [EcoHash sign-up and pricing](https://api.ecohash.com)
+- [EcoHash sign-up and pricing](https://ecohash.com)
 - [EcoHash API keys guide](https://docs.ecohash.com/getting-started/api-keys)
 - [n8n community nodes documentation](https://docs.n8n.io/integrations/community-nodes/)
 - Support: contact EcoHash through [docs.ecohash.com](https://docs.ecohash.com)

@@ -20,7 +20,7 @@ export class EcoHashApi implements ICredentialType {
       required: true,
       default: '',
       description:
-        'Your EcoHash API key (starts with eco_). Create one at https://api.ecohash.com — new accounts include free starter credit.',
+        'Your EcoHash API key (starts with eco_). Create one at https://console.ecohash.com — new accounts include free starter credit.',
     },
   ];
   authenticate: IAuthenticateGeneric = {
