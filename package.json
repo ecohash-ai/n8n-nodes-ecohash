@@ -1,13 +1,12 @@
 {
   "name": "n8n-nodes-ecohash",
-  "version": "1.0.3",
-  "description": "n8n community nodes for EcoHash: Chat Model for AI Agents, Reranker (BGE) and Embeddings powered by the EcoHash API",
+  "version": "1.1.0",
+  "description": "n8n community node for EcoHash: an OpenAI-compatible Chat Model for AI Agents and Chains, powered by the EcoHash API",
   "keywords": [
     "n8n-community-node-package",
     "ecohash",
     "llm",
-    "reranker",
-    "embeddings",
+    "chat-model",
     "ai"
   ],
   "license": "MIT",
@@ -26,7 +25,7 @@
   "main": "index.js",
   "scripts": {
     "build": "tsc && npm run copy-assets",
-    "copy-assets": "cp nodes/LmChatEcoHash/ecohash.svg nodes/LmChatEcoHash/ecohash.dark.svg dist/nodes/LmChatEcoHash/ && cp nodes/EcoHashReranker/ecohash.svg nodes/EcoHashReranker/ecohash.dark.svg dist/nodes/EcoHashReranker/ && cp nodes/EmbeddingsEcoHash/ecohash.svg nodes/EmbeddingsEcoHash/ecohash.dark.svg dist/nodes/EmbeddingsEcoHash/ && cp credentials/ecohash.svg credentials/ecohash.dark.svg dist/credentials/",
+    "copy-assets": "cp nodes/LmChatEcoHash/ecohash.svg nodes/LmChatEcoHash/ecohash.dark.svg dist/nodes/LmChatEcoHash/ && cp credentials/ecohash.svg credentials/ecohash.dark.svg dist/credentials/",
     "lint": "eslint nodes credentials --ext .ts --no-error-on-unmatched-pattern",
     "test": "vitest run"
   },
@@ -40,9 +39,7 @@
       "dist/credentials/EcoHashApi.credentials.js"
     ],
     "nodes": [
-      "dist/nodes/LmChatEcoHash/LmChatEcoHash.node.js",
-      "dist/nodes/EcoHashReranker/EcoHashReranker.node.js",
-      "dist/nodes/EmbeddingsEcoHash/EmbeddingsEcoHash.node.js"
+      "dist/nodes/LmChatEcoHash/LmChatEcoHash.node.js"
     ]
   },
   "peerDependencies": {

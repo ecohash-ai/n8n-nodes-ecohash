@@ -1,30 +1,13 @@
-import type {
-  IHttpRequestMethods,
-  INodePropertyOptions,
-  ILoadOptionsFunctions,
-  ISupplyDataFunctions,
-} from 'n8n-workflow';
+import type { ILoadOptionsFunctions, INodePropertyOptions } from 'n8n-workflow';
 
+/**
+ * OpenAI-compatible inference endpoint. Every model request made by this package
+ * (chat completions via `supplyModel`) is sent here and nowhere else.
+ */
 export const ECOHASH_BASE_URL = 'https://api.ecohash.com/v1';
+
+/** Public EcoHash model catalog, used only to populate the model dropdown. */
 export const ECOHASH_CATALOG_URL = 'https://api.ecohash.com/platform/models';
-
-type RequestContext = Pick<ISupplyDataFunctions, 'getCredentials' | 'helpers'> | ILoadOptionsFunctions;
-
-export async function ecohashRequest(
-  ctx: RequestContext,
-  method: IHttpRequestMethods,
-  path: string,
-  body?: object,
-): Promise<any> {
-  const credentials = (await ctx.getCredentials('ecoHashApi')) as { apiKey: string };
-  return await ctx.helpers.httpRequest({
-    method,
-    url: `${ECOHASH_BASE_URL}${path}`,
-    headers: { Authorization: `Bearer ${credentials.apiKey}` },
-    body,
-    json: true,
-  });
-}
 
 interface CatalogEntry {
   model_id: string;
@@ -33,7 +16,7 @@ interface CatalogEntry {
 }
 
 export async function loadModelOptions(
-  ctx: RequestContext,
+  ctx: ILoadOptionsFunctions,
   categories: string[],
 ): Promise<INodePropertyOptions[]> {
   try {

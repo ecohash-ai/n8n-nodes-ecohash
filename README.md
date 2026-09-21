@@ -2,13 +2,15 @@
 
 [![npm version](https://img.shields.io/npm/v/n8n-nodes-ecohash)](https://www.npmjs.com/package/n8n-nodes-ecohash)
 
-This is an n8n community node package for [EcoHash](https://docs.ecohash.com), an OpenAI-compatible model API platform. It adds a Chat Model, a Reranker, and an Embeddings sub-node so you can use EcoHash-hosted models inside n8n's LangChain-based AI nodes (AI Agent, Vector Store retrieval, Question and Answer Chain, etc.).
+This is an n8n community node package for [EcoHash](https://docs.ecohash.com), an OpenAI-compatible model API platform. It adds an **EcoHash Chat Model** sub-node so you can use EcoHash-hosted chat and vision models inside n8n's AI nodes (AI Agent, Basic LLM Chain, Question and Answer Chain, etc.).
+
+The node is built on n8n's public [`@n8n/ai-node-sdk`](https://github.com/n8n-io/n8n/tree/master/packages/%40n8n/ai-node-sdk), and every model request it makes is sent to the EcoHash API at `https://api.ecohash.com/v1`.
 
 [n8n](https://n8n.io) is a [fair-code licensed](https://docs.n8n.io/sustainable-use-license/) workflow automation platform.
 
 ## What is EcoHash
 
-EcoHash ([docs.ecohash.com](https://docs.ecohash.com)) is an OpenAI-compatible API for chat, vision, embedding, and reranking models. Sign up at [ecohash.com](https://ecohash.com) — new accounts include free starter credit, so you can try the nodes below without adding a payment method first.
+EcoHash ([docs.ecohash.com](https://docs.ecohash.com)) is an OpenAI-compatible API for chat, vision, embedding, and reranking models. Sign up at [ecohash.com](https://ecohash.com) — new accounts include free starter credit, so you can try the node below without adding a payment method first.
 
 ## Installation
 
@@ -29,7 +31,7 @@ You can also install it with the n8n CLI or as part of a custom Docker image —
 
 ## Credentials
 
-All three nodes share a single credential type: **EcoHash API**. You only need one API key (it starts with `eco_`).
+The node uses a single credential type: **EcoHash API**. You only need one API key (it starts with `eco_`).
 
 1. Create an account at [ecohash.com](https://ecohash.com) if you haven't already.
 2. Generate an API key by following [docs.ecohash.com/getting-started/api-keys](https://docs.ecohash.com/getting-started/api-keys).
@@ -41,32 +43,19 @@ Saving the credential runs a connectivity check against EcoHash's models endpoin
 
 ### EcoHash Chat Model
 
-A Language Model sub-node that plugs into the **Model** input of AI Agent, Basic LLM Chain, and other LangChain-based nodes in n8n. It gives you access to the EcoHash chat and vision catalog — including GLM, Llama, Qwen, and Gemma families — with an adjustable temperature. The model list is loaded live from EcoHash's catalog, so it stays current as new models are added.
+A Language Model sub-node that plugs into the **Model** input of AI Agent, Basic LLM Chain, and other AI nodes in n8n. It gives you access to the EcoHash chat and vision catalog — including GLM, Llama, Qwen, and Gemma families — with an adjustable temperature. The model list is loaded live from EcoHash's catalog, so it stays current as new models are added.
+
+All chat completions are sent to `https://api.ecohash.com/v1` using your EcoHash API key. No other endpoint is contacted.
 
 Typical workflow: **Chat Trigger → AI Agent** (with **EcoHash Chat Model** attached to the Agent's Model input) **→ respond to chat**.
 
-### EcoHash Reranker
+## Example workflow
 
-A Reranker sub-node that plugs into the **Reranker** input of a Vector Store retrieval node or a Question and Answer Chain. It uses EcoHash's BGE reranker models (`bge-reranker-v2-m3` by default) to re-score retrieved documents against the query and return the top-K matches. n8n's built-in reranker only supports Cohere; this node fills that gap for anyone who wants a self-hostable, OpenAI-compatible alternative.
+[`examples/chat-agent-demo.json`](examples/chat-agent-demo.json) is a minimal, importable workflow: a Chat Trigger feeds an AI Agent, and the **EcoHash Chat Model** node supplies the model.
 
-Typical workflow: Vector Store (retrieve) with **EcoHash Reranker** attached to its Reranker input → AI Agent / Question and Answer Chain.
-
-### Embeddings EcoHash
-
-An Embeddings sub-node that plugs into the **Embeddings** input of any Vector Store node (insert or retrieve mode). It supports EcoHash's embedding models, including the `jina-embeddings-v3` / `v4` and `qwen3-embedding` families, and automatically batches large document sets before sending them to the API.
-
-Typical workflow: **Data source → Default Data Loader → Text Splitter → Vector Store (insert)** (with **Embeddings EcoHash** attached to the Vector Store's Embeddings input).
-
-## Example: RAG with reranking
-
-A minimal retrieval-augmented generation workflow using all three nodes:
-
-1. **Insert phase** — load your documents (e.g. from a file or database), split them with a Text Splitter, and insert them into a Vector Store using **Embeddings EcoHash** for the embedding step.
-2. **Chat Trigger** starts the workflow when a user sends a message.
-3. **AI Agent** receives the message. Attach an **EcoHash Chat Model** node to the Agent's Model input so it can reason and generate the final answer.
-4. Give the Agent a **Vector Store (retrieve)** tool pointed at the index you created in step 1.
-5. Attach an **EcoHash Reranker** node to the Vector Store tool's Reranker input, with **Top K** set to a small number (e.g. 2-3). This re-scores the retrieved chunks against the user's query so the Agent only sees the most relevant ones.
-6. The Agent responds using the reranked context.
+1. In n8n, open a new workflow and choose **Import from File**, then pick the JSON file.
+2. Select your **EcoHash API** credential on the **EcoHash Chat Model** node.
+3. Click **Open chat** and send a message. The Agent replies using the selected EcoHash model.
 
 ## Compatibility
 

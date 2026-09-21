@@ -1,0 +1,83 @@
+{
+  "name": "EcoHash Chat Model demo — AI Agent with chat trigger",
+  "nodes": [
+    {
+      "parameters": {
+        "content": "## EcoHash Chat Model demo\n\n### How it works\n\n1. Click **Open chat** and send a message.\n2. **AI Agent** answers using the **EcoHash Chat Model** attached to its Model input.\n3. Every model request is sent to the EcoHash API at https://api.ecohash.com/v1.\n\n### Setup steps\n\n- Sign up at https://ecohash.com (free starter credit included, no payment method needed).\n- Create an API key at https://console.ecohash.com and add it in n8n as an **EcoHash API** credential.\n- Select that credential on the **EcoHash Chat Model** node.\n- Optionally pick a different model from the dropdown; the list is loaded live from the EcoHash catalog.",
+        "width": 480,
+        "height": 420
+      },
+      "id": "a2b6d3d0-4a2c-4c1e-9d6e-1f2a3b4c5d6e",
+      "name": "Sticky Note",
+      "type": "n8n-nodes-base.stickyNote",
+      "typeVersion": 1,
+      "position": [-800, 240]
+    },
+    {
+      "parameters": {
+        "options": {}
+      },
+      "id": "chat-trigger-1",
+      "name": "When chat message received",
+      "type": "@n8n/n8n-nodes-langchain.chatTrigger",
+      "typeVersion": 1.1,
+      "position": [-800, 0],
+      "webhookId": "5d8c3f6a-2f7e-4b7b-9c3d-8a1e2f3b4c5d"
+    },
+    {
+      "parameters": {
+        "options": {}
+      },
+      "id": "agent-1",
+      "name": "AI Agent",
+      "type": "@n8n/n8n-nodes-langchain.agent",
+      "typeVersion": 3,
+      "position": [-500, 0]
+    },
+    {
+      "parameters": {
+        "model": "GLM-5.2",
+        "temperature": 0.7
+      },
+      "id": "chatmodel-1",
+      "name": "EcoHash Chat Model",
+      "type": "n8n-nodes-ecohash.lmChatEcoHash",
+      "typeVersion": 1,
+      "position": [-500, 220],
+      "credentials": {
+        "ecoHashApi": {
+          "name": "EcoHash API"
+        }
+      }
+    }
+  ],
+  "connections": {
+    "When chat message received": {
+      "main": [
+        [
+          {
+            "node": "AI Agent",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "EcoHash Chat Model": {
+      "ai_languageModel": [
+        [
+          {
+            "node": "AI Agent",
+            "type": "ai_languageModel",
+            "index": 0
+          }
+        ]
+      ]
+    }
+  },
+  "active": false,
+  "pinData": {},
+  "settings": {
+    "executionOrder": "v1"
+  }
+}
