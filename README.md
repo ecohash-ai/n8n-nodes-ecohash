@@ -1,6 +1,16 @@
-# n8n-nodes-ecohash
+<p align="center">
+  <a href="https://ecohash.com?utm_source=github&utm_medium=referral&utm_campaign=api-n8n-always-on&utm_content=readme.logo"><img src="https://raw.githubusercontent.com/ecohash-ai/n8n-nodes-ecohash/main/assets/ecohash-logo.png" width="280" alt="EcoHash"></a>
+</p>
 
-[![npm version](https://img.shields.io/npm/v/n8n-nodes-ecohash)](https://www.npmjs.com/package/n8n-nodes-ecohash)
+<h1 align="center">n8n-nodes-ecohash</h1>
+
+<p align="center">
+  <a href="https://www.npmjs.com/package/n8n-nodes-ecohash"><img src="https://img.shields.io/npm/v/n8n-nodes-ecohash" alt="npm version"></a>
+  <img src="https://img.shields.io/badge/license-MIT-blue" alt="MIT">
+  <a href="https://docs.ecohash.com?utm_source=github&utm_medium=referral&utm_campaign=api-n8n-always-on&utm_content=readme.docs-badge"><img src="https://img.shields.io/badge/documentation-6D28D9" alt="Documentation"></a>
+  <a href="https://x.com/ecohashdev"><img src="https://img.shields.io/badge/X-@ecohashdev-000000?logo=x&logoColor=white" alt="X"></a>
+  <a href="https://huggingface.co/ecohash-ai"><img src="https://img.shields.io/badge/%F0%9F%A4%97%20Hugging%20Face-ecohash--ai-FFD21E" alt="Hugging Face"></a>
+</p>
 
 This is an n8n community node package for [EcoHash](https://docs.ecohash.com?utm_source=github&utm_medium=referral&utm_campaign=api-n8n-always-on&utm_content=readme.intro), an OpenAI-compatible model API platform. It adds an **EcoHash Chat Model** sub-node so you can use EcoHash-hosted chat and vision models inside n8n's AI nodes (AI Agent, Basic LLM Chain, Question and Answer Chain, etc.).
 
@@ -10,7 +20,9 @@ The node is built on n8n's public [`@n8n/ai-node-sdk`](https://github.com/n8n-io
 
 ## What is EcoHash
 
-EcoHash ([docs.ecohash.com](https://docs.ecohash.com?utm_source=github&utm_medium=referral&utm_campaign=api-n8n-always-on&utm_content=readme.about-docs)) is an OpenAI-compatible API for chat, vision, embedding, and reranking models. Sign up at [ecohash.com](https://ecohash.com?utm_source=github&utm_medium=referral&utm_campaign=api-n8n-always-on&utm_content=readme.signup) — new accounts include free starter credit, so you can try the node below without adding a payment method first.
+EcoHash runs an NVIDIA RTX PRO 6000 GPU cloud and, on top of it, an OpenAI-compatible API for chat, vision, embedding, and reranking models. Full documentation is at [docs.ecohash.com](https://docs.ecohash.com?utm_source=github&utm_medium=referral&utm_campaign=api-n8n-always-on&utm_content=readme.about-docs). Sign up at [ecohash.com](https://ecohash.com?utm_source=github&utm_medium=referral&utm_campaign=api-n8n-always-on&utm_content=readme.signup) — new accounts include free starter credit, so you can try the node below without adding a payment method first.
+
+The same account also rents [RTX PRO 6000 Blackwell instances](https://ecohash.com/gpu/rtx-pro-6000?utm_source=github&utm_medium=referral&utm_campaign=api-n8n-always-on&utm_content=readme.gpu) (96 GB VRAM) by the hour, if you would rather self-host a model than call the API. See the [GPU cloud docs](https://docs.ecohash.com/gpu-compute/overview?utm_source=github&utm_medium=referral&utm_campaign=api-n8n-always-on&utm_content=readme.gpu-docs).
 
 ## Installation
 
