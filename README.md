@@ -2,7 +2,7 @@
 
 [![npm version](https://img.shields.io/npm/v/n8n-nodes-ecohash)](https://www.npmjs.com/package/n8n-nodes-ecohash)
 
-This is an n8n community node package for [EcoHash](https://docs.ecohash.com), an OpenAI-compatible model API platform. It adds an **EcoHash Chat Model** sub-node so you can use EcoHash-hosted chat and vision models inside n8n's AI nodes (AI Agent, Basic LLM Chain, Question and Answer Chain, etc.).
+This is an n8n community node package for [EcoHash](https://docs.ecohash.com?utm_source=github&utm_medium=referral&utm_campaign=api-n8n-always-on&utm_content=readme.intro), an OpenAI-compatible model API platform. It adds an **EcoHash Chat Model** sub-node so you can use EcoHash-hosted chat and vision models inside n8n's AI nodes (AI Agent, Basic LLM Chain, Question and Answer Chain, etc.).
 
 The node is built on n8n's public [`@n8n/ai-node-sdk`](https://github.com/n8n-io/n8n/tree/master/packages/%40n8n/ai-node-sdk), and every model request it makes is sent to the EcoHash API at `https://api.ecohash.com/v1`.
 
@@ -10,7 +10,7 @@ The node is built on n8n's public [`@n8n/ai-node-sdk`](https://github.com/n8n-io
 
 ## What is EcoHash
 
-EcoHash ([docs.ecohash.com](https://docs.ecohash.com)) is an OpenAI-compatible API for chat, vision, embedding, and reranking models. Sign up at [ecohash.com](https://ecohash.com) — new accounts include free starter credit, so you can try the node below without adding a payment method first.
+EcoHash ([docs.ecohash.com](https://docs.ecohash.com?utm_source=github&utm_medium=referral&utm_campaign=api-n8n-always-on&utm_content=readme.about-docs)) is an OpenAI-compatible API for chat, vision, embedding, and reranking models. Sign up at [ecohash.com](https://ecohash.com?utm_source=github&utm_medium=referral&utm_campaign=api-n8n-always-on&utm_content=readme.signup) — new accounts include free starter credit, so you can try the node below without adding a payment method first.
 
 ## Installation
 
@@ -33,8 +33,8 @@ You can also install it with the n8n CLI or as part of a custom Docker image —
 
 The node uses a single credential type: **EcoHash API**. You only need one API key (it starts with `eco_`).
 
-1. Create an account at [ecohash.com](https://ecohash.com) if you haven't already.
-2. Generate an API key by following [docs.ecohash.com/getting-started/api-keys](https://docs.ecohash.com/getting-started/api-keys).
+1. Create an account at [ecohash.com](https://ecohash.com?utm_source=github&utm_medium=referral&utm_campaign=api-n8n-always-on&utm_content=readme.cred-signup) if you haven't already.
+2. Generate an API key by following [docs.ecohash.com/getting-started/api-keys](https://docs.ecohash.com/getting-started/api-keys?utm_source=github&utm_medium=referral&utm_campaign=api-n8n-always-on&utm_content=readme.cred-apikey).
 3. In n8n, create a new **EcoHash API** credential and paste the key in.
 
 Saving the credential runs a connectivity check against EcoHash's models endpoint, so you'll get immediate feedback if the key is invalid.
@@ -63,11 +63,11 @@ Developed and tested against n8n 2.x (2.34+). n8n Cloud has supported installing
 
 ## Resources
 
-- [EcoHash documentation](https://docs.ecohash.com)
-- [EcoHash sign-up and pricing](https://ecohash.com)
-- [EcoHash API keys guide](https://docs.ecohash.com/getting-started/api-keys)
+- [EcoHash documentation](https://docs.ecohash.com?utm_source=github&utm_medium=referral&utm_campaign=api-n8n-always-on&utm_content=readme.res-docs)
+- [EcoHash sign-up and pricing](https://ecohash.com?utm_source=github&utm_medium=referral&utm_campaign=api-n8n-always-on&utm_content=readme.res-pricing)
+- [EcoHash API keys guide](https://docs.ecohash.com/getting-started/api-keys?utm_source=github&utm_medium=referral&utm_campaign=api-n8n-always-on&utm_content=readme.res-apikey)
 - [n8n community nodes documentation](https://docs.n8n.io/integrations/community-nodes/)
-- Support: contact EcoHash through [docs.ecohash.com](https://docs.ecohash.com)
+- Support: contact EcoHash through [docs.ecohash.com](https://docs.ecohash.com?utm_source=github&utm_medium=referral&utm_campaign=api-n8n-always-on&utm_content=readme.support)
 
 ## License
 
